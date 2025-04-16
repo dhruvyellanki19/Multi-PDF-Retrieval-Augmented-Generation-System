@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
+from PIL import Image
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -13,6 +14,39 @@ from langchain.chains import create_retrieval_chain
 # --- Load API Key from .env ---
 load_dotenv()
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
+
+
+# --- Page Config and Background ---
+st.set_page_config(page_title="DocuMind AI", page_icon="🧠", layout="wide")
+
+def add_bg_from_url():
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("https://images.unsplash.com/photo-1525186402429-1eef5b15f9ec?auto=format&fit=crop&w=1400&q=80");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+add_bg_from_url()
+
+# --- Styled Title ---
+st.markdown("""
+    <div style="padding: 2rem; background-color: rgba(255,255,255,0.85); border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <h1 style="text-align: center; font-size: 3rem; color: #1c1c1c;">🧠 DocuMind AI</h1>
+        <h3 style="text-align: center; color: #333;">Multi-PDF AI ChatBot Agent</h3>
+        <p style="text-align: center; font-size: 1.2rem; color: #444;">
+            Interact with multiple documents using the power of AI. Upload. Ask. Learn.
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 
 # --- Function to process uploaded PDFs ---
@@ -75,12 +109,10 @@ def get_chain():
     doc_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever, doc_chain)
 
-# --- Streamlit UI ---
-st.set_page_config("Multi-PDF ChatBot")
-st.title(" DocuMind AI: Multi-PDF AI ChatBot Agent")
+
+# --- Sidebar File Upload ---
 st.sidebar.image("image.png")
 st.sidebar.title("📁 Upload Files Here")
-
 uploaded_files = st.sidebar.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
 
 if st.sidebar.button("Upload & Process"):
@@ -94,7 +126,8 @@ if st.sidebar.button("Upload & Process"):
     else:
         st.warning("⚠️ Please upload at least one PDF file.")
 
-# --- Chat input ---
+
+# --- Chat Section ---
 if "chain" in st.session_state:
     question = st.text_input("Ask your question:")
     if question:
