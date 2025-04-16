@@ -12,10 +12,8 @@ from langchain.chains import create_retrieval_chain
 
 # --- Load API Key from .env ---
 load_dotenv()
-groq_key = os.getenv("GROQ_API_KEY")
-if groq_key is None:
-    raise ValueError("GROQ_API_KEY not found in .env")
-os.environ["GROQ_API_KEY"] = groq_key
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
+
 
 # --- Function to process uploaded PDFs ---
 def loadPDF(files):
@@ -79,7 +77,7 @@ def get_chain():
 
 # --- Streamlit UI ---
 st.set_page_config("Multi-PDF ChatBot")
-st.title("Multi-PDF AI ChatBot Agent")
+st.title(" DocuMind AI: Multi-PDF AI ChatBot Agent")
 st.sidebar.image("image.png")
 st.sidebar.title("📁 Upload Files Here")
 
