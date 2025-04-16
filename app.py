@@ -30,27 +30,12 @@ def add_bg_from_url():
             background-repeat: no-repeat;
             background-attachment: fixed;
         }}
-
-        .block-container {{
-            background-color: rgba(255, 255, 255, 0.85);
-            border-radius: 12px;
-            padding: 2rem;
-        }}
-
-        .css-1544g2n {{
-            background-color: transparent !important;
-        }}
-
-        .css-z5fcl4 {{
-            background-color: transparent !important;
-        }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
 add_bg_from_url()
-
 
 # --- Styled Title ---
 st.markdown("""
