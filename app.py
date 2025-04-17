@@ -151,12 +151,12 @@ st.sidebar.subheader("📜 Upload History")
 
 if "upload_history" in st.session_state and st.session_state.upload_history:
     for item in reversed(st.session_state.upload_history[-5:]):  # Show last 5
-        st.sidebar.markdown(f"📄 `{item['name']}`  \n🕒 {item['time']}")
+        st.sidebar.markdown(f"📄 `{item['name']}`  \n {item['time']}")
 else:
     st.sidebar.write("No uploads yet.")
 
 # --- Clear History Button ---
-if st.sidebar.button("🧹 Clear Upload History"):
+if st.sidebar.button(" Clear Upload History"):
     st.session_state.upload_history = []
     st.sidebar.success("Upload history cleared!")
 
