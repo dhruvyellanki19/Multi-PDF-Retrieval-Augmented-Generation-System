@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 from PIL import Image
+from datetime import datetime
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -69,7 +70,7 @@ def loadPDF(files):
         embeddings = HuggingFaceEmbeddings()
         vectorstore = FAISS.from_documents(split_docs, embedding=embeddings)
         vectorstore.save_local("vectordb")
-        st.success("✅ PDF has been processed successfully. ")
+        st.success("✅ PDF has been processed successfully.")
         return True
 
     except Exception as e:
@@ -104,7 +105,6 @@ def get_chain():
         """
     )
 
-    # ✅ Using supported Groq model
     llm = ChatGroq(model="llama3-8b-8192")
     doc_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever, doc_chain)
@@ -117,6 +117,17 @@ uploaded_files = st.sidebar.file_uploader("Upload PDF files", type="pdf", accept
 
 if st.sidebar.button("Upload & Process"):
     if uploaded_files:
+        # Track upload history
+        if "upload_history" not in st.session_state:
+            st.session_state.upload_history = []
+
+        upload_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        for file in uploaded_files:
+            st.session_state.upload_history.append({
+                "name": file.name,
+                "time": upload_time
+            })
+
         st.info("📦 Starting PDF processing...")
         if loadPDF(uploaded_files):
             st.session_state["chain"] = get_chain()
@@ -126,7 +137,6 @@ if st.sidebar.button("Upload & Process"):
     else:
         st.warning("⚠️ Please upload at least one PDF file.")
 
-
 # --- Chat Section ---
 if "chain" in st.session_state:
     question = st.text_input("Ask your question:")
@@ -135,5 +145,21 @@ if "chain" in st.session_state:
             response = st.session_state["chain"].invoke({"input": question})
             st.write(response["answer"])
 
+# --- Upload History Section ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("📜 Upload History")
+
+if "upload_history" in st.session_state and st.session_state.upload_history:
+    for item in reversed(st.session_state.upload_history[-5:]):  # Show last 5
+        st.sidebar.markdown(f"📄 `{item['name']}`  \n🕒 {item['time']}")
+else:
+    st.sidebar.write("No uploads yet.")
+
+# --- Clear History Button ---
+if st.sidebar.button("🧹 Clear Upload History"):
+    st.session_state.upload_history = []
+    st.sidebar.success("Upload history cleared!")
+
+# --- Credits ---
 st.sidebar.markdown("---")
 st.sidebar.write("Project by [Dhruv Yellanki](https://github.com/dhruvyellanki19)")
