@@ -129,6 +129,19 @@ if st.sidebar.button("Upload & Process"):
     else:
         st.warning("⚠️ Please upload at least one PDF file.")
 
+# --- Reminder if no PDF uploaded yet ---
+if "chain" not in st.session_state:
+    st.markdown("""
+        <div style="margin-top: 2rem; padding: 1.5rem; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px;">
+            <h4>📥 Upload a PDF to Begin</h4>
+            <p style="font-size: 1.1rem;">
+                🚨 <strong>No PDF uploaded yet!</strong><br>
+                Please upload at least one PDF using the <strong>sidebar</strong>.<br>
+                Once processed, you’ll be able to ask unlimited questions about its contents.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
 # --- Chat Section (ChatGPT Style) ---
 if "chain" in st.session_state:
     if "chat_history" not in st.session_state:
