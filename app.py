@@ -129,13 +129,13 @@ if st.sidebar.button("Upload & Process"):
     else:
         st.warning("⚠️ Please upload at least one PDF file.")
 
-# --- Reminder if no PDF uploaded yet ---
+# --- Reminder if no PDF uploaded yet (Improved contrast) ---
 if "chain" not in st.session_state:
     st.markdown("""
-        <div style="margin-top: 2rem; padding: 1.5rem; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px;">
-            <h4>📥 Upload a PDF to Begin</h4>
-            <p style="font-size: 1.1rem;">
-                🚨 <strong>No PDF uploaded yet!</strong><br>
+        <div style="margin-top: 2rem; padding: 1.5rem; background-color: rgba(255, 255, 255, 0.85); border-left: 6px solid #ffa500; border-radius: 12px;">
+            <h3 style="color: #333333;">📥 Upload a PDF to Begin</h3>
+            <p style="font-size: 1.05rem; color: #333333;">
+                <strong>🚨 No PDF uploaded yet!</strong><br>
                 Please upload at least one PDF using the <strong>sidebar</strong>.<br>
                 Once processed, you’ll be able to ask unlimited questions about its contents.
             </p>
