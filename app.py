@@ -16,7 +16,6 @@ from langchain.chains import create_retrieval_chain
 load_dotenv()
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 
-
 # --- Page Config and Background ---
 st.set_page_config(page_title="DocuMind AI", page_icon="🧠", layout="wide")
 
@@ -48,7 +47,6 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
-
 
 # --- Function to process uploaded PDFs ---
 def loadPDF(files):
@@ -87,9 +85,7 @@ def loadPDF(files):
 # --- Function to create the QA chain ---
 def get_chain():
     retriever = FAISS.load_local("vectordb", HuggingFaceEmbeddings(), allow_dangerous_deserialization=True).as_retriever()
-
-    prompt = ChatPromptTemplate.from_template(
-        """
+    prompt = ChatPromptTemplate.from_template("""
         You are a helpful assistant knowledgeable about the uploaded PDF documents.
 
         Use ONLY the provided context to answer.
@@ -102,13 +98,10 @@ def get_chain():
         Question: {input}
 
         Answer:
-        """
-    )
-
+    """)
     llm = ChatGroq(model="llama3-8b-8192")
     doc_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever, doc_chain)
-
 
 # --- Sidebar File Upload ---
 st.sidebar.image("image.png")
@@ -117,7 +110,6 @@ uploaded_files = st.sidebar.file_uploader("Upload PDF files", type="pdf", accept
 
 if st.sidebar.button("Upload & Process"):
     if uploaded_files:
-        # Track upload history
         if "upload_history" not in st.session_state:
             st.session_state.upload_history = []
 
@@ -137,20 +129,33 @@ if st.sidebar.button("Upload & Process"):
     else:
         st.warning("⚠️ Please upload at least one PDF file.")
 
-# --- Chat Section ---
+# --- Chat Section (ChatGPT Style) ---
 if "chain" in st.session_state:
-    question = st.text_input("Ask your question:")
-    if question:
-        with st.spinner("💡 Thinking..."):
-            response = st.session_state["chain"].invoke({"input": question})
-            st.write(response["answer"])
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    for msg in st.session_state.chat_history:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    user_input = st.chat_input("Ask your question based on the uploaded PDFs...")
+    if user_input:
+        st.chat_message("user").markdown(user_input)
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+        with st.spinner("💬 Thinking..."):
+            response = st.session_state["chain"].invoke({"input": user_input})
+            answer = response["answer"]
+
+        st.chat_message("assistant").markdown(answer)
+        st.session_state.chat_history.append({"role": "assistant", "content": answer})
 
 # --- Upload History Section ---
 st.sidebar.markdown("---")
 st.sidebar.subheader("📜 Upload History")
 
 if "upload_history" in st.session_state and st.session_state.upload_history:
-    for item in reversed(st.session_state.upload_history[-5:]):  # Show last 5
+    for item in reversed(st.session_state.upload_history[-5:]):
         st.sidebar.markdown(f"📄 `{item['name']}`  \n {item['time']}")
 else:
     st.sidebar.write("No uploads yet.")
