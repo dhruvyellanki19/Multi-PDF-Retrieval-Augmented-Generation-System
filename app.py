@@ -69,7 +69,7 @@ def loadPDF(files):
         embeddings = HuggingFaceEmbeddings()
         vectorstore = FAISS.from_documents(split_docs, embedding=embeddings)
         vectorstore.save_local("vectordb")
-        st.success("✅ Vector store created and saved.")
+        st.success("✅ PDF has been processed successfully. ")
         return True
 
     except Exception as e:
