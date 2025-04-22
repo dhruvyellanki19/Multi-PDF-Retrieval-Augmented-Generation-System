@@ -1,5 +1,6 @@
 # DocuMind AI: Multi-PDF ChatBot Agent 🧠
 
+
 **DocuMind AI** is an AI-powered application that allows users to upload multiple PDF documents, process them, and interact with the content through an intelligent chatbot. Powered by **Langchain**, **Groq**, and **FAISS**, this app enables users to query their PDFs and receive contextually relevant responses in real time.
 
 ## Features
@@ -58,7 +59,8 @@ Start the Streamlit app by running:
 streamlit run app.py
 ```
 
-The app will open in your default web browser.
+## Demo
+You can try the live version of DocuMind AI here:[ DocuMind AI - Live Demo](https://multi-pdf-retrieval-augmented-generation-system.streamlit.app/)
 
 ## Usage
 
