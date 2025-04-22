@@ -65,7 +65,7 @@ def loadPDF(files):
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
         split_docs = splitter.split_documents(documents)
 
-        embeddings = HuggingFaceEmbeddings()
+        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")  # Using default model
         vectorstore = FAISS.from_documents(split_docs, embedding=embeddings)
         vectorstore.save_local("vectordb")
         st.success("✅ PDF has been processed successfully.")
