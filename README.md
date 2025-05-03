@@ -101,10 +101,6 @@ You can try the live version of DocuMind AI here:[ DocuMind AI - Live Demo](http
 
 Feel free to open an issue or submit a pull request if you'd like to contribute to this project. All contributions are welcome!
 
-## License
-
-Distributed under the MIT License. See LICENSE for more details.
-
 ---
 
 ### Project by [Dhruv Yellanki](https://github.com/dhruvyellanki19)
